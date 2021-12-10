@@ -34,7 +34,7 @@ The complex and locally unique properties of the WiFi environment make it very u
 Your first challenge is to write a function to calculate the *Euclidean Distance* and *Manhattan Distance* metrics between each of the scans in the sample trajectory that we introduced above. Using the data from a single trajectory is a good way to test the quality of a similarity metric as we can get fairly accurate estimates of the true distance using the data from the phone's intertial measurement unit (IMU) which is used by a pedestrian dead reckoning (PDR) module.
 
 
-![intro_1.png](figures/intro_1.png)
+![intro_1.png](images/intro_1.png)
 
 
 ```python
