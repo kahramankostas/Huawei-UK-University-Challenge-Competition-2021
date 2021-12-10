@@ -11,7 +11,188 @@
 
 The team presenter: **Kahraman Kostas**
 
-<center> <h1>TASK 1</h1> </center> 
+
+
+<center> <h1>TASK 1 QUESTION</h1> </center> 
+
+
+
+## 1.1 WiFi Similarity Introduction
+
+To get you started we've put together a simple problem to introduce some key indoor positioning concepts. Consider the following environment: a user is travelling in open space in the presence of 3 WiFi emitters (we call the data created by this user a trajectory). Each emitter has a unique mac address. The user is equipped with a smartphone that will periodically scan the WiFi environment and record the RSSI of each detected mac (in dB).
+
+For this model we have used a standard log-loss free-space propagation model for each of the emitters. This is a simplistic model that works well in free space, but breaks down in real indoor environments with walls and other obstacles which can bounce the signals around in a more complex manner. In general we do expect to see a steep drop in RSSI over distance as the fixed energy from the emitting antenna is spread over an increasing area as the wave propagates. In the diagram below each circle denotes a drop of 10dB.
+
+The user walks North-East from point (0,0) and there phone makes three scans of the environment. The data recorded at each scan is shown below.
+```
+scan 0 -> {'green': -60, 'blue': -66, 'red': -67}
+scan 1 -> {'green': -58, 'blue': -61, 'red': -60} 
+scan 2 -> {'green': -66, 'blue': -62, 'red': -59}
+```
+The complex and locally unique properties of the WiFi environment make it very useful for indoor positioning systems. For example in the below image `scan 1` measures data at roughly the centroid of the three emitters and there is no other place in this environment where one could take a reading that would register similar RSSI values. Given a set of scans or "fingerprints" from independent trajectories, we are interested in calculating how similar they are in WiFi space as this is an indication of how close they are in real space.
+
+Your first challenge is to write a function to calculate the *Euclidean Distance* and *Manhattan Distance* metrics between each of the scans in the sample trajectory that we introduced above. Using the data from a single trajectory is a good way to test the quality of a similarity metric as we can get fairly accurate estimates of the true distance using the data from the phone's intertial measurement unit (IMU) which is used by a pedestrian dead reckoning (PDR) module.
+
+
+![intro_1.png](figures/intro_1.png)
+
+
+```python
+def euclidean(fp1, fp2):   
+    raise NotImplementedError
+
+def manhattan(fp1, fp2):
+    raise NotImplementedError
+```
+
+
+```python
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from metrics import eval_dist_metric
+
+with open("intro_trajectory_1.json") as f:
+    traj = json.load(f)
+    
+
+## Pre-calculate the pair indexes we are interested in
+keys = []
+for fp1 in traj['fps']:
+    for fp2 in traj['fps']:
+         # only calculate the upper triangle
+        if fp1['step_index'] > fp2['step_index']:
+            keys.append((fp1['step_index'], fp2['step_index']))
+ 
+## Get the distances from PDR
+true_d = {}
+for step1 in traj['steps']:
+    for step2 in traj['steps']:
+        key = (step1['step_index'],step2['step_index'])
+        if key in keys:
+            true_d[key] = abs(step1['di'] - step2['di'])
+            
+    
+euc_d = {}
+man_d = {}
+for fp1 in traj['fps']:
+    for fp2 in traj['fps']:
+        key = (fp1['step_index'],fp2['step_index'])
+        if key in keys:
+            euc_d[key] = euclidean(fp1['profile'],fp2['profile'])
+            man_d[key] = manhattan(fp1['profile'],fp2['profile'])
+
+print("Euclidean Average Error")
+print(f'{eval_dist_metric(euc_d, true_d):.2f}')
+
+print("Manhattan Average Error")
+print(f'{eval_dist_metric(man_d, true_d):.2f}')
+```
+
+If you correctly implemented the functions you should have seen that the average error for the euclidean metric was `9.29` whilst the Manhattan was only `4.90`. So for this data, the Manhattan distance is a better estimate of the true distance. 
+
+This is of course a very simplistic model. Indeed, there is no direct relationship between the RSSI values and the free space distance in this way. Typically, when we create our own estimates for distance we would use the known pdr distances from within a trajectory to fit the numeric score to a physical distance estimate.
+
+## 1.2 WiFi Similarity Metric
+
+For your main challenge, we would like you to develop your own metric to estimate the real-world distance between two scans, based solely on their WiFi fingerprints. We will provide you with real crowdsourced data collected early in 2021 from a single mall. The data will contain 114661 fingerprints scans and 879824 distances between the scans. The distances will be our best estimate of the true distance given additional information that we will take into account. 
+
+We will provide a test set of fingerprint pairs and you will need to write a function that tells us how far apart they are. 
+
+This function could be as simple as a variation on one of the metrics that we introduced above or as complex as a full machine learning solution that learns to weight different mac addresses (or mac address combinations) differently in different situations.
+
+Some final points to consider:
+- lower RSSI values give less information.
+- Open spaces will have different WiFi characteristics than tight spaces
+- WiFi signals can be blocked by thick walls
+- A small number of MACs may be from moving emitters (people running a Hot-Spot on their phone)
+
+
+
+## 1.3 Loading the data
+
+The data is assembled as three files for you.
+
+The `task1_fingerprints.json` contains all the fingerprint information for the problem. That is each entry represents a real scan of the WiFi emitters in an area of the mall. You will find that the same MAC addresses will be present in many of the fingerprints.
+
+The `task1_train.csv` contains the valid training pairs to help you design/train your algorithm. Each `id1-id2` pair has a labelled ground truth distance (in metres) and each id corresponds to a fingerprints from `task1_fingerprints.json`.
+
+The `task1_test.csv` is the same format as `task1_train.csv` but doesn't have the displacements included. These are what we would like you to predict using the raw fingerprint information.
+
+
+```python
+import csv
+import json
+import os
+from tqdm import tqdm
+
+path_to_data = "for_contestants"
+
+with open(os.path.join(path_to_data,"task1_fingerprints.json")) as f:
+    fps = json.load(f)
+    
+with open(os.path.join(path_to_data,"task1_train.csv")) as f:
+    train_data = []
+    train_h = csv.DictReader(f)
+    for pair in tqdm(train_h):
+        train_data.append([pair['id1'],pair['id2'],float(pair['displacement'])])
+        
+with open(os.path.join(path_to_data,"task1_test.csv")) as f:
+    test_h = csv.DictReader(f)
+    test_ids = []
+    for pair in tqdm(test_h):
+        test_ids.append([pair['id1'],pair['id2']])
+```
+
+### 1.3.1 The Ideal Model
+
+Ultimately, the ideal model should be able to find an exact mapping between the highly dimensional fingerprint space (1 fingerprint can contain many measurements) and the 1 dimensional distance space. It can be useful to plot the pdr distance (from the training data) against some computed similarity metric to see if the metric reveals an obvious trend. High similarity should correlate with low distance.
+
+Below is one distance metric that we use internally for this task. You can see that even for this metric, we have a considerable amount of noise.
+
+**Due to this level of noise, our scoring metric for task 1 will be biased towards precision over recall**
+
+![sim_vs_pdr.png](images/sim_vs_pdr.png)
+
+## 1.4 Submission
+
+Your submission should use the **exact** ids from the *test1_test.csv* file and should populate the third (currently empty) displacement column with your estimated distance (in metres) for that fingerprint pair.
+
+
+```python
+def my_distance_function(fp1, fp2):
+    raise NotImplementedError
+```
+
+
+```python
+output_data = [["id1", "id2", "displacement"]]
+for id1, id2 in tqdm(test_ids):
+    fp1 = fps[id1]
+    fp2 = fps[id2]
+    
+    distance_estimate = my_distance_function(fp1,fp2)
+    output_data.append([id1,id2,distance_estimate])
+    
+with open("MySubmission.csv", "w", newline='') as f:
+    writer = csv.writer(f)
+    writer.writerows(output_data)
+```
+
+![graph_2.png](images/trigraph_2.png)
+
+
+
+
+
+
+
+
+
+
+
+
+<center> <h1>TASK 1 OUR SOLUTION</h1> </center> 
 
 The steps in the first task can be summarized as follows.
 - Input files are read, using those files :
