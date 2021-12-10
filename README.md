@@ -1,8 +1,8 @@
-
-
-
 <img src="images/turkuaz.png" alt="drawing" width="1200"/>
 
+
+
+## Our solution is the winner of the Huawei UK University Challenge Competition 2021.
 
 - Members:
 	- **Rabia Yasa Kostas**
@@ -11,6 +11,10 @@
 
 The team presenter: **Kahraman Kostas**
 
+
+### You can download the original versions of the questions given in the competition here:  
+
+|[ Task 1 ](https://drive.google.com/file/d/1UB8lISg13y6MdyEmQWR3iJ1kMbNrQLEP/view?usp=sharing)| & |[ Task 2 ](https://drive.google.com/file/d/194oSp15BkEBktx9kEmLP-qXg6YD0ZklO/view?usp=sharing)|
 
 
 <center> <h1>TASK 1 QUESTION</h1> </center> 
