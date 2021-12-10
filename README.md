@@ -1,7 +1,7 @@
 
-<center> <h1>Team name: Turquoise</h1> </center>
 
-<img src="images/turkuaz.png" alt="drawing" width="800"/>
+
+<img src="images/turkuaz.png" alt="drawing" width="1200"/>
 
 
 - Members:
