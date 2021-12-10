@@ -6,11 +6,8 @@
 
 - Members:
 	- **Rabia Yasa Kostas**
-		- e-mail: rabia.yasakostas@ed.ac.uk
-		- phone: +44 7427 011498
+
 	- **Kahraman Kostas**
-		- e-mail: kk97@hw.ac.uk
-		- phone: +44 7401 541751
 
 The team presenter: **Kahraman Kostas**
 
