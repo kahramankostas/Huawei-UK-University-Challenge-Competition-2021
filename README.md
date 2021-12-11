@@ -1,6 +1,6 @@
-# Huawei University Challenge Competition 2021
+<center> <h1>   Huawei University Challenge Competition 2021  </h1> </center> 
+<center> <h1>  Data Science for Indoor positioning  </h1> </center> 
 
-# Data Science for Indoor positioning
 
 
 
