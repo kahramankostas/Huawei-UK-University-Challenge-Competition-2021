@@ -1,3 +1,9 @@
+# Huawei University Challenge Competition 2021
+
+# Data Science for Indoor positioning
+
+
+
 <img src="images/turkuaz.png" alt="drawing" width="1200"/>
 
 
