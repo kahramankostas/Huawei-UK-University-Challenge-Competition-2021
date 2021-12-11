@@ -12,7 +12,6 @@
 
 - Members:
 	- **Rabia Yasa Kostas**
-
 	- **Kahraman Kostas**
 
 The team presenter: **Kahraman Kostas**
