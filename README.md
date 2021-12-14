@@ -186,7 +186,7 @@ with open("MySubmission.csv", "w", newline='') as f:
     writer.writerows(output_data)
 ```
 
-![graph_2.png](images/trigraph_2.png)
+
 
 
 
