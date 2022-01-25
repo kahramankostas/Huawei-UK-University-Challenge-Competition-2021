@@ -109,7 +109,16 @@ print(f'{eval_dist_metric(euc_d, true_d):.2f}')
 print("Manhattan Average Error")
 print(f'{eval_dist_metric(man_d, true_d):.2f}')
 ```
+```
 
+    Euclidean Average Error
+    9.29
+    Manhattan Average Error
+    4.90
+    
+
+
+```
 If you correctly implemented the functions you should have seen that the average error for the euclidean metric was `9.29` whilst the Manhattan was only `4.90`. So for this data, the Manhattan distance is a better estimate of the true distance. 
 
 This is of course a very simplistic model. Indeed, there is no direct relationship between the RSSI values and the free space distance in this way. Typically, when we create our own estimates for distance we would use the known pdr distances from within a trajectory to fit the numeric score to a physical distance estimate.
