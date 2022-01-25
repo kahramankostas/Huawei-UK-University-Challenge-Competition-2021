@@ -51,6 +51,20 @@ def euclidean(fp1, fp2):
 def manhattan(fp1, fp2):
     raise NotImplementedError
 ```
+```python
+
+# solution of the above functions
+from scipy.spatial import distance
+def euclidean(fp1, fp2):   
+    fp1=list(fp1.values())
+    fp2=list(fp2.values())
+    return  distance.euclidean(fp1, fp2)
+
+def manhattan(fp1, fp2):
+    fp1=list(fp1.values())
+    fp2=list(fp2.values())
+    return  distance.cityblock(fp1, fp2)
+```
 
 
 ```python
