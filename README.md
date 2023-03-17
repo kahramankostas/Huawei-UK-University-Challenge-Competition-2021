@@ -1,12 +1,7 @@
 <center><h1>Huawei University Challenge Competition 2021</h1></center> 
 <center><h1>Data Science for Indoor positioning</h1></center> 
 
-
-
-
 <img src="images/turkuaz.png" alt="drawing" width="1200"/>
-
-
 
 ## Our solution is the winner of the Huawei UK University Challenge Competition 2021.
 
